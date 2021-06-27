@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Common;
+using DotNetCom.DataBase;
 using DotNetCom.General;
 using DotNetCom.General.Tags;
 using DotNetCom.OpcDa;
@@ -58,12 +59,29 @@ namespace ProDAq
 
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            foreach (var item in appData.ComModules)
+            {
+                var modules = item.Value;
+                foreach (var module in modules)
+                {
+                    if(module.Enabled) module.Start();
+                }
+            }
+            LoadSignals();
+            propertyGrid.Enabled = false;
         }
 
         private void stopToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            foreach (var item in appData.ComModules)
+            {
+                var modules = item.Value;
+                foreach (var module in modules)
+                {
+                    module.Stop();
+                }
+            }
+            propertyGrid.Enabled = true;
         }
 
         private void addToolStripMenuItem_Click(object sender, EventArgs e)
@@ -163,6 +181,10 @@ namespace ProDAq
                     lastNode.Text = e.ChangedItem.Value as string;
                 }
             }
+            if (e.ChangedItem.Label == "Items")
+            {
+                LoadSignals();
+            }
         }
 
         private void LoadModules()
@@ -186,7 +208,33 @@ namespace ProDAq
 
         private void LoadSignals()
         {
+            var parent = treeSignals.Nodes[0];
+            parent.Nodes.Clear();
+            foreach (var item in Data.TagsDataBase.Tags)
+            {
+                var tag = item.Value;
+                if (tag.Value == null) continue;
+                var imgIdx = tag.Value is bool ? 10 : 11;
+                AddSignalToNode(parent, tag, imgIdx);
+            }
+        }
 
+        private void AddSignalToNode(TreeNode node, Tag tag, int imgIdx)
+        {
+            var newNode = new TreeNode(tag.Name);
+            newNode.Tag = tag;
+            newNode.ImageIndex = imgIdx;
+            newNode.SelectedImageIndex = imgIdx;
+            node.Nodes.Add(newNode);
+        }
+
+        private void tabs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var tab = sender as TabControl;
+            if(tab.SelectedIndex == 1)
+            {
+                LoadSignals();
+            }
         }
     }
 }
