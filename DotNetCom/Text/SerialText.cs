@@ -39,12 +39,18 @@ namespace DotNetCom.Text
 
         [JsonProperty]
         [Category("Data")]
-        [DisplayName("Items to Receive")]
+        [DisplayName("Items")]
         [Description("Items to receive on serial port. " +
             "In Json split mode, Id will be the json path. " +
             "In Strin split mode, Id is not necessary.")]
         [Editor(typeof(TextInterfaceEditor), typeof(UITypeEditor))]
         public TagLink[] TagLinks { get; set; }
+
+        [JsonProperty]
+        [Category("General")]
+        [DisplayName("Enabled")]
+        [Description("Enable or disable this module")]
+        public bool Enabled { get; set; } = true;
 
         [Browsable(false)]
         public string ReceivedData { get; set; }
@@ -63,6 +69,16 @@ namespace DotNetCom.Text
 
             InitializeComponent();
             Init();
+        }
+
+        public void Start()
+        {
+            Begin();
+        }
+
+        public void Stop()
+        {
+            End();
         }
 
         private void Init()

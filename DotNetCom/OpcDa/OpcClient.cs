@@ -19,7 +19,7 @@ namespace DotNetCom.OpcDa
     [JsonObject(MemberSerialization.OptIn)]
     public class OpcClient : Component, IComModule
     {
-        private int updateRate;
+        private int updateRate = 500;
         private int itHdl;
         private OPCGroup opcGroup;
 
@@ -98,7 +98,7 @@ namespace DotNetCom.OpcDa
 
         [JsonProperty]
         [Category("OPC")]
-        [DisplayName("OPC Items")]
+        [DisplayName("Items")]
         [Description("OPC Items of this client.")]
         [Editor(typeof(OPCItemCollectionEditor), typeof(UITypeEditor))]
         public TagLink[] TagLinks { get; set; }
@@ -110,7 +110,7 @@ namespace DotNetCom.OpcDa
         [Category("General")]
         [DisplayName("Enabled")]
         [Description("Enable or disable this module")]
-        public bool Enabled { get; set; }
+        public bool Enabled { get; set; } = true;
 
         [JsonProperty]
         [Category("General")]
@@ -136,6 +136,16 @@ namespace DotNetCom.OpcDa
         {
             InitializeComponent();
             Console = new ModuleConsole();
+        }
+
+        public void Start()
+        {
+            Connect();
+        }
+
+        public void Stop()
+        {
+            Disconnect();
         }
 
         public void Connect()
