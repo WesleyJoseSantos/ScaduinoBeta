@@ -40,6 +40,7 @@ namespace ProDAq
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("OPC DA", 1, 1);
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Text Interface", 6, 6);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Signals", 9, 9);
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tabs = new System.Windows.Forms.TabControl();
@@ -52,7 +53,6 @@ namespace ProDAq
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tpTrend1 = new System.Windows.Forms.TabPage();
-            this.trend1 = new DotNetScadaComponents.Trend.Trend();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,6 +68,7 @@ namespace ProDAq
             this.trendsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.trend1 = new DotNetScadaComponents.Trend.Trend();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -97,8 +98,8 @@ namespace ProDAq
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainer1.Size = new System.Drawing.Size(853, 537);
-            this.splitContainer1.SplitterDistance = 258;
+            this.splitContainer1.Size = new System.Drawing.Size(1350, 705);
+            this.splitContainer1.SplitterDistance = 242;
             this.splitContainer1.TabIndex = 1;
             // 
             // splitContainer2
@@ -116,8 +117,8 @@ namespace ProDAq
             // 
             this.splitContainer2.Panel2.Controls.Add(this.propertyGrid);
             this.splitContainer2.Panel2.Controls.Add(this.label1);
-            this.splitContainer2.Size = new System.Drawing.Size(258, 537);
-            this.splitContainer2.SplitterDistance = 207;
+            this.splitContainer2.Size = new System.Drawing.Size(242, 705);
+            this.splitContainer2.SplitterDistance = 352;
             this.splitContainer2.TabIndex = 2;
             // 
             // tabs
@@ -128,8 +129,9 @@ namespace ProDAq
             this.tabs.Location = new System.Drawing.Point(0, 0);
             this.tabs.Name = "tabs";
             this.tabs.SelectedIndex = 0;
-            this.tabs.Size = new System.Drawing.Size(258, 207);
+            this.tabs.Size = new System.Drawing.Size(242, 352);
             this.tabs.TabIndex = 1;
+            this.tabs.SelectedIndexChanged += new System.EventHandler(this.tabs_SelectedIndexChanged);
             // 
             // tabModules
             // 
@@ -137,7 +139,7 @@ namespace ProDAq
             this.tabModules.Location = new System.Drawing.Point(4, 22);
             this.tabModules.Name = "tabModules";
             this.tabModules.Padding = new System.Windows.Forms.Padding(3);
-            this.tabModules.Size = new System.Drawing.Size(250, 181);
+            this.tabModules.Size = new System.Drawing.Size(234, 326);
             this.tabModules.TabIndex = 1;
             this.tabModules.Text = "Modules";
             this.tabModules.UseVisualStyleBackColor = true;
@@ -165,7 +167,7 @@ namespace ProDAq
             treeNode1,
             treeNode2});
             this.treeModules.SelectedImageIndex = 0;
-            this.treeModules.Size = new System.Drawing.Size(244, 175);
+            this.treeModules.Size = new System.Drawing.Size(228, 320);
             this.treeModules.TabIndex = 0;
             this.treeModules.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tree_AfterSelect);
             this.treeModules.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeModules_KeyDown);
@@ -183,6 +185,9 @@ namespace ProDAq
             this.imageList1.Images.SetKeyName(6, "Text Interface.ico");
             this.imageList1.Images.SetKeyName(7, "group.ico");
             this.imageList1.Images.SetKeyName(8, "rs-232-male.png");
+            this.imageList1.Images.SetKeyName(9, "item.png");
+            this.imageList1.Images.SetKeyName(10, "square-wave.png");
+            this.imageList1.Images.SetKeyName(11, "analog.png");
             // 
             // tabSignals
             // 
@@ -203,6 +208,12 @@ namespace ProDAq
             this.treeSignals.ImageList = this.imageList1;
             this.treeSignals.Location = new System.Drawing.Point(3, 3);
             this.treeSignals.Name = "treeSignals";
+            treeNode3.ImageIndex = 9;
+            treeNode3.Name = "signals";
+            treeNode3.SelectedImageIndex = 9;
+            treeNode3.Text = "Signals";
+            this.treeSignals.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode3});
             this.treeSignals.SelectedImageIndex = 0;
             this.treeSignals.Size = new System.Drawing.Size(244, 175);
             this.treeSignals.TabIndex = 1;
@@ -213,7 +224,7 @@ namespace ProDAq
             this.propertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid.Location = new System.Drawing.Point(0, 18);
             this.propertyGrid.Name = "propertyGrid";
-            this.propertyGrid.Size = new System.Drawing.Size(258, 308);
+            this.propertyGrid.Size = new System.Drawing.Size(242, 331);
             this.propertyGrid.TabIndex = 0;
             this.propertyGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGrid_PropertyValueChanged);
             // 
@@ -224,7 +235,7 @@ namespace ProDAq
             this.label1.ForeColor = System.Drawing.Color.Black;
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(258, 18);
+            this.label1.Size = new System.Drawing.Size(242, 18);
             this.label1.TabIndex = 2;
             this.label1.Text = "Properties";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -236,7 +247,7 @@ namespace ProDAq
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(591, 537);
+            this.tabControl1.Size = new System.Drawing.Size(1104, 705);
             this.tabControl1.TabIndex = 0;
             // 
             // tpTrend1
@@ -245,21 +256,10 @@ namespace ProDAq
             this.tpTrend1.Location = new System.Drawing.Point(4, 22);
             this.tpTrend1.Name = "tpTrend1";
             this.tpTrend1.Padding = new System.Windows.Forms.Padding(3);
-            this.tpTrend1.Size = new System.Drawing.Size(583, 511);
+            this.tpTrend1.Size = new System.Drawing.Size(1096, 679);
             this.tpTrend1.TabIndex = 0;
             this.tpTrend1.Text = "trend1";
             this.tpTrend1.UseVisualStyleBackColor = true;
-            // 
-            // trend1
-            // 
-            this.trend1.AllowDrop = true;
-            this.trend1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.trend1.Location = new System.Drawing.Point(3, 3);
-            this.trend1.Name = "trend1";
-            this.trend1.Size = new System.Drawing.Size(577, 505);
-            this.trend1.TabIndex = 0;
-            this.trend1.TagsCollection = null;
-            this.trend1.TimeBase = 100;
             // 
             // menuStrip1
             // 
@@ -270,7 +270,7 @@ namespace ProDAq
             this.trendsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(853, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1350, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -325,14 +325,14 @@ namespace ProDAq
             // startToolStripMenuItem
             // 
             this.startToolStripMenuItem.Name = "startToolStripMenuItem";
-            this.startToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
+            this.startToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.startToolStripMenuItem.Text = "Start";
             this.startToolStripMenuItem.Click += new System.EventHandler(this.startToolStripMenuItem_Click);
             // 
             // stopToolStripMenuItem
             // 
             this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
-            this.stopToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
+            this.stopToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.stopToolStripMenuItem.Text = "Stop";
             this.stopToolStripMenuItem.Click += new System.EventHandler(this.stopToolStripMenuItem_Click);
             // 
@@ -348,14 +348,14 @@ namespace ProDAq
             // addToolStripMenuItem
             // 
             this.addToolStripMenuItem.Name = "addToolStripMenuItem";
-            this.addToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.addToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.addToolStripMenuItem.Text = "Add";
             this.addToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem_Click);
             // 
             // removeToolStripMenuItem
             // 
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.removeToolStripMenuItem.Text = "Remove";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
@@ -382,11 +382,22 @@ namespace ProDAq
             this.removeToolStripMenuItem1.Text = "Remove";
             this.removeToolStripMenuItem1.Click += new System.EventHandler(this.removeToolStripMenuItem1_Click);
             // 
+            // trend1
+            // 
+            this.trend1.AllowDrop = true;
+            this.trend1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trend1.Location = new System.Drawing.Point(3, 3);
+            this.trend1.Name = "trend1";
+            this.trend1.Size = new System.Drawing.Size(1090, 673);
+            this.trend1.TabIndex = 0;
+            this.trend1.TagsCollection = null;
+            this.trend1.TimeBase = 100;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(853, 561);
+            this.ClientSize = new System.Drawing.Size(1350, 729);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStrip1);
             this.Name = "MainForm";
