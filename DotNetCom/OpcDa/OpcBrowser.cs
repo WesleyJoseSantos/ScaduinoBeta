@@ -199,7 +199,9 @@ namespace DotNetCom.OpcDa
             using(OpcBrowser form = new OpcBrowser())
             {
                 client.Connect();
-                form.OPCBrowser = client.Server.CreateBrowser();
+                var server = client.Server;
+                if (server == null) return null;
+                form.OPCBrowser = server.CreateBrowser();
                 form.SelectedItems = client.TagLinks;
 
                 if(svc.ShowDialog(form) == DialogResult.OK)
