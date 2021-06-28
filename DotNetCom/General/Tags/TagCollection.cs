@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
 using System.Drawing.Design;
+using System.Linq;
 
 namespace DotNetCom.General.Tags
 {
@@ -27,10 +28,18 @@ namespace DotNetCom.General.Tags
             TagChanged?.Invoke(sender, e);
         }
 
+        public void Add(string tag)
+        {
+            var list = Names?.ToList() ?? new System.Collections.Generic.List<string>();
+            list.Add(tag);
+            Names = list.ToArray();
+        }
+
         public void EnableEvents()
         {
             var tags = Tags;
             DisableEvents();
+            if (tags == null) return;
             foreach (var item in tags)
             {
                 item.ValueChanged += Item_ValueChanged;
@@ -40,6 +49,7 @@ namespace DotNetCom.General.Tags
         public void DisableEvents()
         {
             var tags = Tags;
+            if (tags == null) return;
             foreach (var item in tags)
             {
                 item.ValueChanged -= Item_ValueChanged;
