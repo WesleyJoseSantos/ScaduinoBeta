@@ -42,6 +42,9 @@ namespace DotNetScadaComponents.Trend
             // trendChartSettings1
             // 
             this.trendChartSettings1.Axis = this.trendChartAxisSettings1;
+            this.trendChartSettings1.Name = "trend";
+            this.trendChartSettings1.TagCollection = null;
+            this.trendChartSettings1.TimeBase = 0;
             // 
             // trendChartAxisSettings1
             // 
@@ -64,6 +67,8 @@ namespace DotNetScadaComponents.Trend
             // trendChart
             // 
             this.trendChart.Dock = System.Windows.Forms.DockStyle.Fill;
+            legend1.BackColor = System.Drawing.Color.Transparent;
+            legend1.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Left;
             legend1.Name = "Legend1";
             this.trendChart.Legends.Add(legend1);
             this.trendChart.Location = new System.Drawing.Point(0, 0);
