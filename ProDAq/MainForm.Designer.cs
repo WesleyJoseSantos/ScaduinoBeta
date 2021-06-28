@@ -42,7 +42,6 @@ namespace ProDAq
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tabs = new System.Windows.Forms.TabControl();
             this.tabModules = new System.Windows.Forms.TabPage();
-            this.appTree = new ProDAq.AppTree();
             this.tabSignals = new System.Windows.Forms.TabPage();
             this.treeSignals = new System.Windows.Forms.TreeView();
             this.propertyGrid = new System.Windows.Forms.PropertyGrid();
@@ -63,6 +62,9 @@ namespace ProDAq
             this.trendsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataloggerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.appTree = new ProDAq.AppTree();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -139,18 +141,6 @@ namespace ProDAq
             this.tabModules.Text = "Modules";
             this.tabModules.UseVisualStyleBackColor = true;
             // 
-            // appTree
-            // 
-            this.appTree.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.appTree.ImageIndex = 0;
-            this.appTree.Location = new System.Drawing.Point(3, 3);
-            this.appTree.Name = "appTree";
-            this.appTree.SelectedImageIndex = 0;
-            this.appTree.Size = new System.Drawing.Size(228, 320);
-            this.appTree.TabIndex = 0;
-            this.appTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tree_AfterSelect);
-            this.appTree.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeModules_KeyDown);
-            // 
             // tabSignals
             // 
             this.tabSignals.Controls.Add(this.treeSignals);
@@ -215,7 +205,8 @@ namespace ProDAq
             this.fileToolStripMenuItem,
             this.networkToolStripMenuItem,
             this.modulesToolStripMenuItem,
-            this.trendsToolStripMenuItem});
+            this.trendsToolStripMenuItem,
+            this.dataloggerToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1350, 24);
@@ -330,6 +321,33 @@ namespace ProDAq
             this.removeToolStripMenuItem1.Text = "Remove";
             this.removeToolStripMenuItem1.Click += new System.EventHandler(this.removeToolStripMenuItem1_Click);
             // 
+            // dataloggerToolStripMenuItem
+            // 
+            this.dataloggerToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openFileToolStripMenuItem});
+            this.dataloggerToolStripMenuItem.Name = "dataloggerToolStripMenuItem";
+            this.dataloggerToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
+            this.dataloggerToolStripMenuItem.Text = "Datalogger";
+            // 
+            // openFileToolStripMenuItem
+            // 
+            this.openFileToolStripMenuItem.Name = "openFileToolStripMenuItem";
+            this.openFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openFileToolStripMenuItem.Text = "Open File";
+            this.openFileToolStripMenuItem.Click += new System.EventHandler(this.openFileToolStripMenuItem_Click);
+            // 
+            // appTree
+            // 
+            this.appTree.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.appTree.ImageIndex = 0;
+            this.appTree.Location = new System.Drawing.Point(3, 3);
+            this.appTree.Name = "appTree";
+            this.appTree.SelectedImageIndex = 0;
+            this.appTree.Size = new System.Drawing.Size(228, 320);
+            this.appTree.TabIndex = 0;
+            this.appTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tree_AfterSelect);
+            this.appTree.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeModules_KeyDown);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -386,5 +404,7 @@ namespace ProDAq
         private System.Windows.Forms.PropertyGrid propertyGrid;
         private System.Windows.Forms.Label label1;
         private TabControl tabControl1;
+        private ToolStripMenuItem dataloggerToolStripMenuItem;
+        private ToolStripMenuItem openFileToolStripMenuItem;
     }
 }
