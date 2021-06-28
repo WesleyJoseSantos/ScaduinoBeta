@@ -3,6 +3,7 @@ using DotNetCom.DataBase;
 using DotNetCom.General;
 using DotNetCom.OpcDa;
 using DotNetCom.Text;
+using DotNetScadaComponents.Trend;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -19,18 +20,17 @@ namespace ProDAq
         public string DefaultFile { get => Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ProDAq.json"; }
         
         private TagsDataBase tagsDataBase;
-
-        //ImgIdx, ComModule
-        public Dictionary<int, IComModule[]> ComModules {
+        
+        public IComModule[] ComModules 
+        {
             get
             {
-                var dic = new Dictionary<int, IComModule[]>();
-                dic.Add(7, OpcClientModules);
-                dic.Add(8, SerialTextModules);
-                return dic;
+                var list = new List<IComModule>();
+                list.AddRange(OpcClientModules);
+                list.AddRange(SerialTextModules);
+                return list.ToArray();
             }
         }
-
 
         [JsonProperty(Order = 1)]
         public TagsDataBase TagsDataBase
@@ -49,11 +49,19 @@ namespace ProDAq
         [JsonProperty(Order = 2)]
         public SerialText[] SerialTextModules { get; set; }
 
+        [JsonProperty(Order = 3)]
+        public Trend[] Trends { get; set; }
+
+        [JsonProperty(Order = 4)]
+        public Datalogger Datalogger { get; set; }
+
         public AppData()
         {
             TagsDataBase = new TagsDataBase();
             OpcClientModules = new OpcClient[0];
             SerialTextModules = new SerialText[0];
+            Trends = new Trend[0];
+            Datalogger = new Datalogger();
         }
 
         public IAppData New()
@@ -94,6 +102,20 @@ namespace ProDAq
         public IAppData LoadDefault()
         {
             return Load(DefaultFile);
+        }
+
+        public void AddTrend(Trend trend)
+        {
+            var list = Trends.ToList();
+            list.Add(trend);
+            Trends = list.ToArray();
+        }
+
+        public void RemoveTrend(Trend trend)
+        {
+            var list = Trends.ToList();
+            list.Remove(trend);
+            Trends = list.ToArray();
         }
 
         public void AddModule(OpcClient opcClient)
