@@ -93,7 +93,7 @@ namespace DotNetCom.General.Tags
 
         public double Value
         {
-            get => (double)SelectedTag.Value;
+            get => double.Parse(SelectedTag.Value.ToString());
             set
             {
                 _value = value;
