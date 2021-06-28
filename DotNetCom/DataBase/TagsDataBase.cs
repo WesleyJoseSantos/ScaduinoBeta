@@ -22,6 +22,8 @@ namespace DotNetCom.DataBase
             set; 
         } = new Dictionary<string, TagGroup>();
 
+        public event EventHandler TagChanged;
+
         public void Add(Tag tag)
         {
             if (tag == null) return;
@@ -32,6 +34,7 @@ namespace DotNetCom.DataBase
                 if (!Tags.ContainsKey(tag.Name))
                 {
                     Tags.Add(tag.Name, tag);
+                    tag.ValueChanged += Tag_ValueChanged;
                 }
                 else
                 {
@@ -45,6 +48,11 @@ namespace DotNetCom.DataBase
             }
         }
 
+        private void Tag_ValueChanged(object sender, EventArgs e)
+        {
+            TagChanged?.Invoke(sender, null);
+        }
+
         public void Remove(Tag tag)
         {
             if (tag == null) return;
@@ -54,6 +62,7 @@ namespace DotNetCom.DataBase
             {
                 if (!Tags.ContainsKey(tag.Name))
                 {
+                    tag.ValueChanged -= Tag_ValueChanged;
                     Tags.Remove(tag.Name);
                 }
             }
@@ -105,6 +114,7 @@ namespace DotNetCom.DataBase
         public Tag[] GetTags(string[] tags)
         {
             var list = new List<Tag>();
+            if (tags == null) return null;
             foreach (var tag in tags)
             {
                 if (Tags.ContainsKey(tag ?? ""))
