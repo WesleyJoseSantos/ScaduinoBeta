@@ -77,6 +77,18 @@
     <Compile Include="AppNotifyIcon.Designer.cs">
       <DependentUpon>AppNotifyIcon.cs</DependentUpon>
     </Compile>
+    <Compile Include="AppTree.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="AppTree.Designer.cs">
+      <DependentUpon>AppTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Datalogger.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Datalogger.Designer.cs">
+      <DependentUpon>Datalogger.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,6 +99,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AppNotifyIcon.resx">
       <DependentUpon>AppNotifyIcon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AppTree.resx">
+      <DependentUpon>AppTree.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
