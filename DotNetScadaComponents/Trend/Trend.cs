@@ -6,25 +6,52 @@ using System.Windows.Forms;
 
 namespace DotNetScadaComponents.Trend
 {
-    public partial class Trend : UserControl
+    [JsonObject(MemberSerialization.OptIn)]
+    public partial class Trend : UserControl, ITagServer
     {
+        [JsonProperty]
+        [Category("General")]
+        [DisplayName("Settings")]
+        [Description("Trend settings.")]
         public TrendChartSettings Settings
         {
             get => trendChart.Settings;
             set => trendChart.Settings = value;
         }
 
-        public int TimeBase
-        {
-            get => timer.Interval;
-            set => timer.Interval = value;
-        }
-
-        [JsonProperty]
-        [Category("General")]
+        [Category("Database")]
         [DisplayName("Tags Collection")]
         [Description("Collection of tags linked to this control.")]
-        public TagCollection TagsCollection { get; set; }
+        public TagCollection TagCollection
+        {
+            get => Settings.TagCollection;
+            set => Settings.TagCollection = value;
+        }
+
+        public new event EventHandler Click
+        {
+            add
+            {
+                base.Click += value;
+                foreach (Control control in Controls)
+                {
+                    control.Click += Control_Click;
+                }
+            }
+            remove
+            {
+                base.Click += value;
+                foreach (Control control in Controls)
+                {
+                    control.Click -= Control_Click;
+                }
+            }
+        }
+
+        private void Control_Click(object sender, EventArgs e)
+        {
+            OnClick(e);
+        }
 
         private Timer timer;
 
@@ -33,13 +60,14 @@ namespace DotNetScadaComponents.Trend
             InitializeComponent();
             timer = new Timer();
             timer.Tick += Timer_Tick;
+            TagCollection = new TagCollection();
         }
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            if (TagsCollection?.Tags != null)
+            if (TagCollection?.Tags != null)
             {
-                foreach (var tag in TagsCollection.Tags)
+                foreach (var tag in TagCollection.Tags)
                 {
                     var time = DateTime.Now.ToString("HH:mm:ss.fff");
                     if(tag.Value != null)
@@ -55,17 +83,24 @@ namespace DotNetScadaComponents.Trend
             timer.Start();
         }
 
-        private void UpdateSeries()
+        public void Stop()
         {
-            //if (tags != null)
-            //{
-            //    var list = tags.ToList();
-            //    foreach (var item in value)
-            //    {
-            //        list.Remove(item);
-            //    }
-            //    trendChart.Remove(list.ToArray());
-            //}
+            timer.Stop();
+        }
+
+        public void Initialize()
+        {
+            trendChart.UpdateSeries();
+        }
+
+        public void Add(Tag tag)
+        {
+            if(TagCollection == null){
+                TagCollection = new TagCollection();
+            }
+            var time = DateTime.Now.ToString("HH:mm:ss.fff");
+            TagCollection.Add(tag.Name);
+            trendChart.AddData(tag.Name, tag.Value, time);
         }
     }
 }
