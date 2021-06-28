@@ -1,13 +1,6 @@
 ﻿using DotNetCom.General;
 using DotNetCom.OpcDa;
 using DotNetCom.Text;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace ProDAq
@@ -46,11 +39,11 @@ namespace ProDAq
         {
             if(comModule is OpcClient)
             {
-                AddModuleToNode(AppNodes.OpcDa, comModule, (int)Images.OpcDa);
+                AddModuleToNode(AppNodes.OpcDa, comModule, (int)Images.Group);
             }
             if(comModule is SerialText)
             {
-                AddModuleToNode(AppNodes.TextInterface, comModule, (int)Images.TextInterface);
+                AddModuleToNode(AppNodes.TextInterface, comModule, (int)Images.Serial);
             }
         }
 
