@@ -1,24 +1,40 @@
 ﻿using DotNetCom.General.Tags;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace DotNetScadaComponents.Trend
 {
     class TrendChart : Chart
     {
-        public TrendChartSettings Settings { get; set; } = new TrendChartSettings();
+        public TrendChartSettings Settings
+        {
+            get => settings;
+            set
+            {
+                if(settings != null) settings.TagCollectionChanged += Settings_TagCollectionChanged;
+                settings = value;
+                settings.TagCollectionChanged += Settings_TagCollectionChanged;
 
+            }
+        }
         private Dictionary<string, Series> digSeries = new Dictionary<string, Series>();
         private Dictionary<string, Series> analogSeries = new Dictionary<string, Series>();
         private List<Series> digSeriesList = new List<Series>();
         private int cont = 0;
+        private TrendChartSettings settings = new TrendChartSettings();
 
         public TrendChart()
         {
-            
+        }
+
+        private void Settings_TagCollectionChanged(object sender, EventArgs e)
+        {
+            UpdateSeries();
         }
 
         public void Init()
@@ -52,7 +68,7 @@ namespace DotNetScadaComponents.Trend
             var trendIdx = 0;
             var series = GetSeries(name, value);
             if (value == null) return;
-            if(value is bool)
+            if (value is bool)
             {
                 trendIdx = AddBooleanData(name, (bool)value, time);
             }
@@ -67,7 +83,7 @@ namespace DotNetScadaComponents.Trend
                 //digArea.AxisY.Minimum = chartArea.AxisY.Minimum;
                 //digArea.AxisY.Maximum = chartArea.AxisY.Maximum;
             }
-            if(trendIdx > Settings.Axis.X.Size)
+            if (trendIdx > Settings.Axis.X.Size)
             {
                 series.Points.RemoveAt(0);
                 //var chartArea = ChartAreas.FindByName(series.ChartArea);
@@ -114,7 +130,7 @@ namespace DotNetScadaComponents.Trend
         public ChartArea GetDigitalChartArea()
         {
             var chartArea = ChartAreas.FindByName("DigitalChartArea");
-            if(chartArea == null)
+            if (chartArea == null)
             {
                 var newChartArea = new ChartArea("DigitalChartArea");
                 newChartArea.Name = "DigitalChartArea";
@@ -130,7 +146,7 @@ namespace DotNetScadaComponents.Trend
 
         public void ConfigureSeries(ref Series series, object value)
         {
-            if(value is bool)
+            if (value is bool)
             {
                 digSeries.Add(series.Name, series);
                 digSeriesList.Add(series);
@@ -169,7 +185,35 @@ namespace DotNetScadaComponents.Trend
             ChartAreas.Add(chart);
         }
 
-        public void Remove(Tag[] tags) 
+        public void UpdateSeries()
+        {
+            if (Settings.TagCollection.Tags == null) return;
+            var tags = Settings.TagCollection.Names;
+            var removeDig = digSeries.Keys.Except(tags).ToArray();
+            var removeAnalog = analogSeries.Keys.Except(tags).ToArray();
+            foreach (var name in removeDig)
+            {
+                Series.Remove(digSeries[name]);
+                digSeries.Remove(name);
+            }
+            foreach (var name in removeAnalog)
+            {
+                Series.Remove(analogSeries[name]);
+                analogSeries.Remove(name);
+                var chartArea = ChartAreas.FindByName(name);
+                if (chartArea != null) ChartAreas.Remove(chartArea);
+            }
+            foreach (var tag in Settings.TagCollection.Tags)
+            {
+                if(!digSeries.ContainsKey(tag.Name) && !analogSeries.ContainsKey(tag.Name))
+                {
+                    var time = DateTime.Now.ToString("HH:mm:ss.fff");
+                    AddData(tag.Name, tag.Value, time);
+                }
+            }
+        }
+
+        public void Remove(Tag[] tags)
         {
             foreach (var tag in tags)
             {
@@ -194,35 +238,79 @@ namespace DotNetScadaComponents.Trend
         }
     }
 
-    [DesignTimeVisible(false)]
-    public class TrendChartSettings : Component
+    [JsonObject(MemberSerialization.OptIn)]
+    public class TrendChartSettings : Component, ITagServer
     {
+        private TagCollection tagCollection;
+
+        [JsonProperty]
+        [Category("General")]
+        [DisplayName("Name")]
+        [Description("Name of this trend")]
+        public string Name { get; set; } = "trend";
+
+        [JsonProperty]
+        [Category("Timing")]
+        [DisplayName("Timebase")]
+        [Description("Timebase used to update trend")]
+        public int TimeBase { get; set; }
+
+        [JsonProperty]
+        [Category("General")]
+        [DisplayName("Tags Collection")]
+        [Description("Collection of tags linked to this control.")]
+        public TagCollection TagCollection
+        {
+            get => tagCollection;
+            set
+            {
+                tagCollection = value;
+                TagCollectionChanged?.Invoke(this, null);
+            }
+        }
+
+        [JsonProperty]
+        [Category("Settings")]
+        [DisplayName("Axis")]
+        [Description("Axis settings.")]
         public TrendChartAxisSettings Axis { get; set; } = new TrendChartAxisSettings();
+
+        public event EventHandler TagCollectionChanged;
     }
 
     [DesignTimeVisible(false)]
+    [JsonObject(MemberSerialization.OptIn)]
     public class TrendChartAxisSettings : Component
     {
+        [JsonProperty]
         public TrendChartAxisXSettings X { get; set; } = new TrendChartAxisXSettings();
+        [JsonProperty]
         public TrendChartAxisYSettings Y { get; set; } = new TrendChartAxisYSettings();
     }
 
     [DesignTimeVisible(false)]
+    [JsonObject(MemberSerialization.OptIn)]
     public class TrendChartAxisXSettings : Component
     {
+        [JsonProperty]
         public int Size { get; set; } = 1000;
     }
 
     [DesignTimeVisible(false)]
+    [JsonObject(MemberSerialization.OptIn)]
     public class TrendChartAxisYSettings : Component
     {
+        [JsonProperty]
         public TrendChartAxisYDigitalSettings DigitalSignals { get; set; } = new TrendChartAxisYDigitalSettings();
     }
 
     [DesignTimeVisible(false)]
+    [JsonObject(MemberSerialization.OptIn)]
     public class TrendChartAxisYDigitalSettings : Component
     {
+        [JsonProperty]
         public int Scale { get; set; } = 25;
+        [JsonProperty]
         public float SizeOffSet { get; set; } = 0.3F;
     }
 }
