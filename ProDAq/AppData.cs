@@ -17,7 +17,7 @@ namespace ProDAq
     [JsonObject(MemberSerialization.OptIn)]
     public class AppData : IAppData
     {
-        public string DefaultFile { get => Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ProDAq.json"; }
+        public string DefaultFile { get => Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ProDAq\\ProDAq.json"; }
         
         private TagsDataBase tagsDataBase;
         
@@ -72,6 +72,11 @@ namespace ProDAq
         public void Save(string file)
         {
             var strData = JsonConvert.SerializeObject(this, Formatting.Indented);
+            var fileInfo = new FileInfo(file);
+            if (!fileInfo.Directory.Exists)
+            {
+                Directory.CreateDirectory(fileInfo.Directory.FullName);
+            }
             File.WriteAllText(file, strData);
         }
 
