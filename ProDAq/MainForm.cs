@@ -16,7 +16,16 @@ namespace ProDAq
         private TreeNode lastNode;
         private bool running;
 
-        public IAppData AppData { get => appData; set => appData = value as AppData; }
+        public IAppData AppData
+        {
+            get => appData;
+            set
+            {
+                appData = value as AppData;
+                appTree.AddModules(appData.ComModules);
+                appTree.AppNodes.Datalogging.Tag = appData.Datalogger;
+            }
+        }
 
         public AppNotifyIcon NotifyIcon { get; set; }
 
@@ -31,7 +40,6 @@ namespace ProDAq
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            appTree.AddModules(appData.ComModules);
             LoadTrends();
         }
 
@@ -77,6 +85,7 @@ namespace ProDAq
             {
                 trend.Start();
             }
+            appData.Datalogger.Start();
 
             LoadSignals();
             propertyGrid.Enabled = false || propertyGrid.SelectedObject is TrendChartSettings;
@@ -98,6 +107,8 @@ namespace ProDAq
             {
                 trend.Stop();
             }
+            appData.Datalogger.Stop();
+
             propertyGrid.Enabled = true;
             running = false;
         }
@@ -313,6 +324,11 @@ namespace ProDAq
             {
                 pGrid.Enabled = !running;
             }
+        }
+
+        private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            appData.Datalogger.Open();
         }
     }
 }
