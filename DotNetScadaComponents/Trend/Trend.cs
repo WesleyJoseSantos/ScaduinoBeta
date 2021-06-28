@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Windows.Forms;
 
 namespace DotNetScadaComponents.Trend
@@ -88,6 +89,20 @@ namespace DotNetScadaComponents.Trend
             timer.Stop();
         }
 
+        public void Open(string[] files)
+        {
+            foreach (var file  in files)
+            {
+                var content = File.ReadAllText(file).Split('\n');
+                foreach (var line in content)
+                {
+                    var data = JsonConvert.DeserializeObject<TrendPointData>(line);
+                    if (data == null) continue;
+                    trendChart.AddData(data.Name, data.Value, data.Date);
+                }
+            }
+        }
+
         public void Initialize()
         {
             trendChart.UpdateSeries();
@@ -101,6 +116,26 @@ namespace DotNetScadaComponents.Trend
             var time = DateTime.Now.ToString("HH:mm:ss.fff");
             TagCollection.Add(tag.Name);
             trendChart.AddData(tag.Name, tag.Value, time);
+        }
+    }
+
+    public class TrendPointData
+    {
+        public string Name { get; set; }
+        public object Value { get; set; }
+        public string Date { get => DateTime.Now.ToString("HH:mm:ss.fff"); }
+
+        public TrendPointData(string name, object value)
+        {
+            Name = name;
+            Value = value;
+        }
+
+        public static string ToJson(string name, object value)
+        {
+            var data = new TrendPointData(name, value);
+            var str = JsonConvert.SerializeObject(data);
+            return str;
         }
     }
 }
