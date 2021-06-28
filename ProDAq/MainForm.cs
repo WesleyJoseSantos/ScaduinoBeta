@@ -6,6 +6,7 @@ using DotNetCom.General;
 using DotNetCom.General.Tags;
 using DotNetCom.OpcDa;
 using DotNetCom.Text;
+using DotNetScadaComponents.Trend;
 
 namespace ProDAq
 {
@@ -13,6 +14,7 @@ namespace ProDAq
     {
         private AppData appData;
         private TreeNode lastNode;
+        private bool running;
 
         public IAppData AppData { get => appData; set => appData = value as AppData; }
 
@@ -29,7 +31,8 @@ namespace ProDAq
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            LoadModules();
+            appTree.AddModules(appData.ComModules);
+            LoadTrends();
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -54,76 +57,78 @@ namespace ProDAq
 
         private void StartScreen_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Stop();
             FileDialog.SaveDefault(AppData);
+            
         }
 
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (var item in appData.ComModules)
+            Start();
+        }
+
+        private void Start()
+        {
+            foreach (var module in appData.ComModules)
             {
-                var modules = item.Value;
-                foreach (var module in modules)
-                {
-                    if(module.Enabled) module.Start();
-                }
+                if (module.Enabled) module.Start();
             }
+            foreach (var trend in appData.Trends)
+            {
+                trend.Start();
+            }
+
             LoadSignals();
-            propertyGrid.Enabled = false;
+            propertyGrid.Enabled = false || propertyGrid.SelectedObject is TrendChartSettings;
+            running = true;
         }
 
         private void stopToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (var item in appData.ComModules)
+            Stop();
+        }
+
+        private void Stop()
+        {
+            foreach (var module in appData.ComModules)
             {
-                var modules = item.Value;
-                foreach (var module in modules)
-                {
-                    module.Stop();
-                }
+                module.Stop();
+            }
+            foreach (var trend in appData.Trends)
+            {
+                trend.Stop();
             }
             propertyGrid.Enabled = true;
+            running = false;
         }
 
         private void addToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(treeModules.SelectedNode == null)
+            if(appTree.SelectedNode == null)
             {
                 MessageBox.Show("Please, select an valid module group.");
                 return;
             }
             TreeNode parentNode = new TreeNode();
             object newModule;
-            switch (treeModules.SelectedNode.Text)
+            switch (appTree.SelectedNode.Text)
             {
                 case "OPC DA":
                     newModule = new OpcClient();
-                    parentNode = treeModules.Nodes[0];
-                    AddModuleToNode(parentNode, newModule as IComModule, 7);
+                    parentNode = appTree.AppNodes.OpcDa;
+                    appTree.AddModule(newModule as OpcClient);
                     appData.AddModule(newModule as OpcClient);
                     break;
                 case "Text Interface":
                     newModule = new SerialText();
-                    parentNode = treeModules.Nodes[1];
-                    AddModuleToNode(parentNode, newModule as IComModule, 8);
+                    parentNode = appTree.AppNodes.TextInterface;
+                    appTree.AddModule(newModule as SerialText);
                     appData.AddModule(newModule as SerialText);
                     break;
                 default:
                     break;
             }
             parentNode.Expand();
-        }
-
-        private TreeNode AddModuleToNode(TreeNode parentNode, IComModule newModule, int imgIdx)
-        {
-            var newNode = new TreeNode();
-            newNode.Text = $"{newModule.Name}";
-            newModule.Name = newNode.Text;
-            newNode.Tag = newModule;
-            newNode.ImageIndex = imgIdx;
-            newNode.SelectedImageIndex = imgIdx;
-            parentNode.Nodes.Add(newNode);
-            parentNode.Expand();
-            return newNode;
         }
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -174,35 +179,22 @@ namespace ProDAq
 
         private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
-            if(e.ChangedItem.Label == "Name")
+            var pGrid = s as PropertyGrid;
+            var obj = pGrid.SelectedObject;
+            if(e.ChangedItem.Label == "Name" && obj is IComModule)
             {
                 if(lastNode != null)
                 {
                     lastNode.Text = e.ChangedItem.Value as string;
                 }
             }
-            if (e.ChangedItem.Label == "Items")
+            if (e.ChangedItem.Label == "Items" && obj is IComModule)
             {
                 LoadSignals();
             }
-        }
-
-        private void LoadModules()
-        {
-            int nodeIdx = 0;
-            foreach (var item in appData.ComModules)
+            if (e.ChangedItem.Label == "Name" && obj is TrendChartSettings)
             {
-                var node = treeModules.Nodes[nodeIdx];
-                AddModulesToNode(node, item.Value, item.Key);
-                nodeIdx++;
-            }
-        }
-
-        private void AddModulesToNode(TreeNode node, IComModule[] modules, int imgIdx)
-        {
-            foreach (var item in modules)
-            {
-                AddModuleToNode(node, item, imgIdx);
+                tabControl1.SelectedTab.Text = e.ChangedItem.Value as string;
             }
         }
 
@@ -217,7 +209,7 @@ namespace ProDAq
                 var imgIdx = tag.Value is bool ? 10 : 11;
                 AddSignalToNode(parent, tag, imgIdx);
             }
-        }
+        }   
 
         private void AddSignalToNode(TreeNode node, Tag tag, int imgIdx)
         {
@@ -234,6 +226,92 @@ namespace ProDAq
             if(tab.SelectedIndex == 1)
             {
                 LoadSignals();
+            }
+        }
+
+        private void treeSignals_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            var tree = sender as TreeView;
+            tree.SelectedNode = e.Item as TreeNode;
+            var tag = tree.SelectedNode.Tag;
+            tree.DoDragDrop(tag, DragDropEffects.Copy);
+        }
+
+        private void trend_DragEnter(object sender, DragEventArgs e)
+        {
+            var tag = e.Data.GetData(typeof(Tag)) as Tag;
+            if(tag is Tag)
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+        }
+
+        private void trend_DragDrop(object sender, DragEventArgs e)
+        {
+            var tag = e.Data.GetData(typeof(Tag)) as Tag;
+            if (tag is Tag)
+            {
+                if(sender is Trend)
+                {
+                    var trend = sender as Trend;
+                    trend.Add(tag);
+                }
+                else
+                {
+                    var trend = new Trend();
+                    AddTrend(trend);
+                    trend.Add(tag);
+                    appData.AddTrend(trend);
+                }
+            }
+        }
+
+        private void trend_Click(object sender, EventArgs e)
+        {
+            var trend = sender as Trend;
+            propertyGrid.SelectedObject = trend.Settings;
+        }
+
+        private void AddTrend(Trend trend)
+        {
+            var tab = new TabPage();
+
+            trend.Dock = DockStyle.Fill;
+            trend.Click += trend_Click;
+            trend.AllowDrop = true;
+            splitContainer1.AllowDrop = false;
+            trend.DragEnter += trend_DragEnter;
+            trend.DragDrop += trend_DragDrop;
+
+            tab.Controls.Add(trend);
+            tab.Text = trend.Settings.Name;
+
+            tabControl1.TabPages.Add(tab);
+
+            if (running) trend.Start();
+        }
+
+
+        private void LoadTrends()
+        {
+            foreach (var trend in appData.Trends)
+            {
+                AddTrend(trend);
+                trend.Initialize();
+            }
+        }
+
+        private void propertyGrid_SelectedObjectsChanged(object sender, EventArgs e)
+        {
+            var pGrid = sender as PropertyGrid;
+            var obj = pGrid.SelectedObject;
+            if(obj is TrendChartSettings)
+            {
+                pGrid.Enabled = true;
+            }
+            else
+            {
+                pGrid.Enabled = !running;
             }
         }
     }
