@@ -50,6 +50,7 @@ namespace MobileHmi
             this.networkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.runHMIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.projectExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.itemViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -135,7 +136,8 @@ namespace MobileHmi
             // 
             this.networkToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.startToolStripMenuItem,
-            this.stopToolStripMenuItem});
+            this.stopToolStripMenuItem,
+            this.runHMIToolStripMenuItem});
             this.networkToolStripMenuItem.Name = "networkToolStripMenuItem";
             this.networkToolStripMenuItem.Size = new System.Drawing.Size(82, 20);
             this.networkToolStripMenuItem.Text = "Mobile HMI";
@@ -143,16 +145,23 @@ namespace MobileHmi
             // startToolStripMenuItem
             // 
             this.startToolStripMenuItem.Name = "startToolStripMenuItem";
-            this.startToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
-            this.startToolStripMenuItem.Text = "Start";
+            this.startToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.startToolStripMenuItem.Text = "Start Server";
             this.startToolStripMenuItem.Click += new System.EventHandler(this.startToolStripMenuItem_Click);
             // 
             // stopToolStripMenuItem
             // 
             this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
-            this.stopToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
-            this.stopToolStripMenuItem.Text = "Stop";
+            this.stopToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.stopToolStripMenuItem.Text = "Stop Server";
             this.stopToolStripMenuItem.Click += new System.EventHandler(this.stopToolStripMenuItem_Click);
+            // 
+            // runHMIToolStripMenuItem
+            // 
+            this.runHMIToolStripMenuItem.Name = "runHMIToolStripMenuItem";
+            this.runHMIToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.runHMIToolStripMenuItem.Text = "Start Application";
+            this.runHMIToolStripMenuItem.Click += new System.EventHandler(this.runHMIToolStripMenuItem_Click);
             // 
             // viewToolStripMenuItem
             // 
@@ -167,21 +176,21 @@ namespace MobileHmi
             // projectExplorerToolStripMenuItem
             // 
             this.projectExplorerToolStripMenuItem.Name = "projectExplorerToolStripMenuItem";
-            this.projectExplorerToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.projectExplorerToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
             this.projectExplorerToolStripMenuItem.Text = "Project Explorer";
             this.projectExplorerToolStripMenuItem.Click += new System.EventHandler(this.projectExplorerToolStripMenuItem_Click);
             // 
             // itemViewerToolStripMenuItem
             // 
             this.itemViewerToolStripMenuItem.Name = "itemViewerToolStripMenuItem";
-            this.itemViewerToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.itemViewerToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
             this.itemViewerToolStripMenuItem.Text = "Editor";
             this.itemViewerToolStripMenuItem.Click += new System.EventHandler(this.itemViewerToolStripMenuItem_Click);
             // 
             // propertyGridToolStripMenuItem
             // 
             this.propertyGridToolStripMenuItem.Name = "propertyGridToolStripMenuItem";
-            this.propertyGridToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.propertyGridToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
             this.propertyGridToolStripMenuItem.Text = "Property Grid";
             this.propertyGridToolStripMenuItem.Click += new System.EventHandler(this.propertyGridToolStripMenuItem_Click);
             // 
@@ -311,6 +320,7 @@ namespace MobileHmi
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.label3);
+            this.splitContainer1.Panel2Collapsed = true;
             this.splitContainer1.Size = new System.Drawing.Size(967, 545);
             this.splitContainer1.SplitterDistance = 454;
             this.splitContainer1.TabIndex = 0;
@@ -337,7 +347,6 @@ namespace MobileHmi
             this.codeEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.codeEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
             this.codeEditor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.codeEditor.Font = new System.Drawing.Font("Courier New", 9.75F);
             this.codeEditor.Hotkeys = resources.GetString("codeEditor.Hotkeys");
             this.codeEditor.IsReplaceMode = false;
             this.codeEditor.Language = FastColoredTextBoxNS.Language.HTML;
@@ -350,7 +359,7 @@ namespace MobileHmi
             this.codeEditor.RightBracket2 = ')';
             this.codeEditor.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
             this.codeEditor.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("codeEditor.ServiceColors")));
-            this.codeEditor.Size = new System.Drawing.Size(454, 527);
+            this.codeEditor.Size = new System.Drawing.Size(967, 527);
             this.codeEditor.TabIndex = 5;
             this.codeEditor.Zoom = 100;
             this.codeEditor.CustomAction += new System.EventHandler<FastColoredTextBoxNS.CustomActionEventArgs>(this.codeEditor_CustomAction);
@@ -362,7 +371,7 @@ namespace MobileHmi
             this.label2.ForeColor = System.Drawing.Color.Black;
             this.label2.Location = new System.Drawing.Point(0, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(454, 18);
+            this.label2.Size = new System.Drawing.Size(967, 18);
             this.label2.TabIndex = 6;
             this.label2.Text = "Code Editor";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -439,5 +448,6 @@ namespace MobileHmi
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ToolStripMenuItem runHMIToolStripMenuItem;
     }
 }
