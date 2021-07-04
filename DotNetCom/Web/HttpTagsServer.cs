@@ -105,7 +105,7 @@ namespace DotNetCom.Web
             listener = new HttpListener();
             listener.Start();
 
-            Console?.Errors?.Invoke((MethodInvoker)delegate
+            Console?.Log?.Invoke((MethodInvoker)delegate
             {
                 Console?.Log?.AppendText($"Web Server started on {Url}.\n");
             });
@@ -129,21 +129,28 @@ namespace DotNetCom.Web
             {
                 while (Status == WebServerStatus.Running)
                 {
-                    HandleIncomingConnections();
+                    try
+                    {
+                        HandleIncomingConnections();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message + '\n' + ex.StackTrace);
+                    }
                 }
                 Status = WebServerStatus.Stopped;
+                listener?.Stop();
+                listener?.Prefixes?.Clear();
+                Console?.Errors?.Invoke((MethodInvoker)delegate
+                {
+                    Console?.Log?.AppendText("Web Server stopped.\n");
+                });
             });
         }
 
         public void Stop()
         {
             Status = WebServerStatus.Stopped;
-            listener.Stop();
-            listener.Prefixes.Clear();
-            Console?.Errors?.Invoke((MethodInvoker)delegate
-            {
-                Console?.Log?.AppendText("Web Server stopped.\n");
-            });
         }
 
         private void Initialize()
