@@ -27,6 +27,7 @@ namespace MobileHmi
 
         public void UpdateExplorer(TreeNode treeNode, string path)
         {
+            if (path == null) return;
             var dirInfo = new DirectoryInfo(path);
             ProjectFolder = path;
             treeNode.Nodes.Clear();
