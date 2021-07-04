@@ -80,7 +80,7 @@ namespace DotNetCom.Web
             }
             else
             {
-                return "";
+                return "text/html";
             }
         }
 
