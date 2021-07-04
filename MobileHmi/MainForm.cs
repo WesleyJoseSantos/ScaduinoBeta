@@ -23,13 +23,12 @@ namespace MobileHmi
 
         private ChromiumWebBrowser webBrowser;
 
-        private Form localHmi;
+        //private Form localHmi;
 
         public MainForm(AppData appData)
         {
             InitializeComponent();
             AppData = appData;
-            localHmi = new Form();
             FileDialog = new AppDataFileDialog();
             webBrowser = new ChromiumWebBrowser("", null);
         }
@@ -41,6 +40,7 @@ namespace MobileHmi
                 appData.MobileHmi.UpdateExplorer(treeView.Nodes[1], appData.HmiWebServer.ServerRoot);
             }
             splitContainer1.Panel2.Controls.Add(webBrowser);
+            webBrowser.BringToFront();
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -103,7 +103,12 @@ namespace MobileHmi
                             codeEditor.Language = GetLanguage(filePath);
                             codeEditor.Tag = filePath;
                             codeEditor.OpenFile(filePath);
-                            webBrowser.Load(filePath);
+                            splitContainer1.Panel2Collapsed = true;
+                            if (filePath.Contains(".htm"))
+                            {
+                                splitContainer1.Panel2Collapsed = false;
+                                webBrowser.Load(filePath);
+                            }
                         }
                     }
                     break;
@@ -126,25 +131,38 @@ namespace MobileHmi
 
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(appData.OpcClient.Enabled) appData.OpcClient.Connect();
-            if(appData.UsbTagsServer.Enabled) appData.UsbTagsServer.Begin();
-            if(appData.HttpTagsServer.Enabled) appData.HttpTagsServer.Start();
-            if (appData.HmiWebServer.Enabled)
-            {
-                appData.HmiWebServer.Start();
-            }
-            UpdateNotifyStatus();
+            StartServer();
+            splitContainer1.Panel2Collapsed = false;
+            webBrowser.Load(appData.HmiWebServer.Url);
+        }
+
+        private void runHMIToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StartServer();
             StartLocalHmi();
         }
 
+        private void StartServer()
+        {
+            if (appData.OpcClient.Enabled) appData.OpcClient.Connect();
+            if (appData.UsbTagsServer.Enabled) appData.UsbTagsServer.Begin();
+            if (appData.HttpTagsServer.Enabled) appData.HttpTagsServer.Start();
+            if (appData.HmiWebServer.Enabled) appData.HmiWebServer.Start();
+            UpdateNotifyStatus();
+        }
 
         private void StartLocalHmi()
         {
+            var localHmi = new Form();
+            var newBrowser = new ChromiumWebBrowser("", null);
+
             localHmi.FormBorderStyle = FormBorderStyle.None;
             localHmi.WindowState = FormWindowState.Maximized;
             localHmi.Controls.Clear();
-            localHmi.Controls.Add(webBrowser);
-            webBrowser.Load(appData.HmiWebServer.Url);
+            newBrowser.Dock = DockStyle.Fill;
+
+            localHmi.Controls.Add(newBrowser);
+            newBrowser.Load(appData.HmiWebServer.Url);
             localHmi.Show();
         }
         private void stopToolStripMenuItem_Click(object sender, EventArgs e)
