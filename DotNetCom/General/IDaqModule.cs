@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DotNetCom.General
 {
-    public interface IComModule : ITagWriterConteiner
+    public interface IDaqModule : ITagWriterConteiner
     {
         bool Enabled {get; set;}
 
