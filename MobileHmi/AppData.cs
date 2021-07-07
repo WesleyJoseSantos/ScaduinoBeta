@@ -15,7 +15,11 @@ namespace MobileHmi
     {
         private TagsDataBase tagsDataBase;
 
-        public string DefaultFile { get => Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\MobileHmi.json"; }
+        public string File { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\MobileHmi.json";
+
+        public bool IsDefaultFile { get => File == Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\MobileHmi.json"; }
+
+        public string Directory { get; set; }
 
         [JsonProperty(Order = 1)]
         public TagsDataBase TagsDataBase
@@ -58,15 +62,15 @@ namespace MobileHmi
             return new AppData();
         }
 
-        public void Save(string file)
+        public void SaveAs(string file)
         {
             var strData = JsonConvert.SerializeObject(this, Formatting.Indented);
-            File.WriteAllText(file, strData);
+            System.IO.File.WriteAllText(file, strData);
         }
 
-        public void SaveDefault()
+        public void Save()
         {
-            Save(DefaultFile);
+            SaveAs(File);
         }
 
         public IAppData Load(string file)
@@ -74,13 +78,13 @@ namespace MobileHmi
             var appData = new AppData();
             try
             {
-                var strData = File.ReadAllText(file);
+                var strData = System.IO.File.ReadAllText(file);
                 appData = JsonConvert.DeserializeObject<AppData>(strData);
                 appData.MobileHmi.ProjectFolder = appData.HmiWebServer.ServerRoot;
             }
             catch (Exception ex)
             {
-                if (File.Exists(file))
+                if (System.IO.File.Exists(file))
                 {
                     MessageBox.Show(ex.Message);
                 }
@@ -89,9 +93,9 @@ namespace MobileHmi
             return appData;
         }
 
-        public IAppData LoadDefault()
+        public IAppData Load()
         {
-            return Load(DefaultFile);
+            return Load(File);
         }
     }
 }
