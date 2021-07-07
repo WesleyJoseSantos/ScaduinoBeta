@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebEditor", "WebEditor\WebE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{88C1EE2C-711E-4CEB-A58C-482AD4DC2E2C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScaduinoDevices", "ScaduinoDevices\ScaduinoDevices.csproj", "{906D3FC5-A160-440D-9A2A-846F64FAC66B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,18 @@ Global
 		{88C1EE2C-711E-4CEB-A58C-482AD4DC2E2C}.Release|x64.Build.0 = Release|Any CPU
 		{88C1EE2C-711E-4CEB-A58C-482AD4DC2E2C}.Release|x86.ActiveCfg = Release|Any CPU
 		{88C1EE2C-711E-4CEB-A58C-482AD4DC2E2C}.Release|x86.Build.0 = Release|Any CPU
+		{906D3FC5-A160-440D-9A2A-846F64FAC66B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{906D3FC5-A160-440D-9A2A-846F64FAC66B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{906D3FC5-A160-440D-9A2A-846F64FAC66B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{906D3FC5-A160-440D-9A2A-846F64FAC66B}.Debug|x64.Build.0 = Debug|Any CPU
+		{906D3FC5-A160-440D-9A2A-846F64FAC66B}.Debug|x86.ActiveCfg = Debug|x86
+		{906D3FC5-A160-440D-9A2A-846F64FAC66B}.Debug|x86.Build.0 = Debug|x86
+		{906D3FC5-A160-440D-9A2A-846F64FAC66B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{906D3FC5-A160-440D-9A2A-846F64FAC66B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{906D3FC5-A160-440D-9A2A-846F64FAC66B}.Release|x64.ActiveCfg = Release|Any CPU
+		{906D3FC5-A160-440D-9A2A-846F64FAC66B}.Release|x64.Build.0 = Release|Any CPU
+		{906D3FC5-A160-440D-9A2A-846F64FAC66B}.Release|x86.ActiveCfg = Release|Any CPU
+		{906D3FC5-A160-440D-9A2A-846F64FAC66B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
