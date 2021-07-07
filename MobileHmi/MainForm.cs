@@ -55,7 +55,7 @@ namespace MobileHmi
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FileDialog.Save(AppData);
+            FileDialog.SaveAs(AppData);
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
