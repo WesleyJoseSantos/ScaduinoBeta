@@ -17,15 +17,19 @@ namespace ProDAq
     [JsonObject(MemberSerialization.OptIn)]
     public class AppData : IAppData
     {
-        public string DefaultFile { get => Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ProDAq\\ProDAq.json"; }
-        
+        public string File { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ProDAq\\ProDAq.json";
+
+        public bool IsDefaultFile { get => File == Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\ProDAq\\ProDAq.json"; }
+
+        public string Directory { get; set; }
+
         private TagsDataBase tagsDataBase;
         
-        public IComModule[] ComModules 
+        public IDaqModule[] DaqModules 
         {
             get
             {
-                var list = new List<IComModule>();
+                var list = new List<IDaqModule>();
                 list.AddRange(OpcClientModules);
                 list.AddRange(SerialTextModules);
                 return list.ToArray();
@@ -69,20 +73,20 @@ namespace ProDAq
             return new AppData();
         }
 
-        public void Save(string file)
+        public void SaveAs(string file)
         {
             var strData = JsonConvert.SerializeObject(this, Formatting.Indented);
             var fileInfo = new FileInfo(file);
             if (!fileInfo.Directory.Exists)
             {
-                Directory.CreateDirectory(fileInfo.Directory.FullName);
+                System.IO.Directory.CreateDirectory(fileInfo.Directory.FullName);
             }
-            File.WriteAllText(file, strData);
+            System.IO.File.WriteAllText(file, strData);
         }
 
-        public void SaveDefault()
+        public void Save()
         {
-            Save(DefaultFile);
+            SaveAs(File);
         }
 
         public IAppData Load(string file)
@@ -90,12 +94,12 @@ namespace ProDAq
             var appData = new AppData();
             try
             {
-                var strData = File.ReadAllText(file);
+                var strData = System.IO.File.ReadAllText(file);
                 appData = JsonConvert.DeserializeObject<AppData>(strData);
             }
             catch (Exception ex)
             {
-                if (File.Exists(file))
+                if (System.IO.File.Exists(file))
                 {
                     MessageBox.Show(ex.Message);
                 }
@@ -104,9 +108,9 @@ namespace ProDAq
             return appData;
         }
 
-        public IAppData LoadDefault()
+        public IAppData Load()
         {
-            return Load(DefaultFile);
+            return Load(File);
         }
 
         public void AddTrend(Trend trend)
