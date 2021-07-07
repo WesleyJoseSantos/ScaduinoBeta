@@ -1,4 +1,5 @@
-﻿using DotNetCom.General.Tags;
+﻿using DotNetCom.General;
+using DotNetCom.General.Tags;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

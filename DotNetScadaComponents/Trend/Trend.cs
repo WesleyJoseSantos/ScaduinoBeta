@@ -1,4 +1,5 @@
-﻿using DotNetCom.General.Tags;
+﻿using DotNetCom.General;
+using DotNetCom.General.Tags;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
@@ -8,7 +9,7 @@ using System.Windows.Forms;
 namespace DotNetScadaComponents.Trend
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public partial class Trend : UserControl, ITagServer
+    public partial class Trend : UserControl, IDasModule
     {
         [JsonProperty]
         [Category("General")]
