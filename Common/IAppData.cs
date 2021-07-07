@@ -7,11 +7,13 @@ namespace Common
 {
     public interface IAppData
     {
-        string DefaultFile { get; }
-        void Save(string file);
-        void SaveDefault();
+        string File { get; set; }
+        bool IsDefaultFile { get; }
+        string Directory { get; set; }
+        void SaveAs(string file);
+        void Save();
         IAppData Load(string file);
-        IAppData LoadDefault();
+        IAppData Load();
         IAppData New();
     }
 }

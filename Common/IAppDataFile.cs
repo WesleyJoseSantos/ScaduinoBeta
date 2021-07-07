@@ -33,7 +33,7 @@ namespace Common
             return appData;
         }
 
-        public void Save(IAppData appData)
+        public void SaveAs(IAppData appData)
         {
             var dialog = new SaveFileDialog()
             {
@@ -42,13 +42,13 @@ namespace Common
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                appData.Save(dialog.FileName);
+                appData.SaveAs(dialog.FileName);
             }
         }
 
         public void SaveDefault(IAppData appData)
         {
-            appData.SaveDefault();
+            appData.Save();
         }
     }
 }
