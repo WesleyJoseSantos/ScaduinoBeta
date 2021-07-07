@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MobileHmi
 {
-    public interface IHmiComModule : IComModule
+    public interface IHmiComModule : IDaqModule
     {
     }
 }
