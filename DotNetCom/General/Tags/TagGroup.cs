@@ -1,14 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Drawing.Design;
-using DotNetCom.General.Tags;
 using DotNetCom.General.NamedObject;
 using DotNetCom.DataBase;
 
 namespace DotNetCom.General.Tags
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public partial class TagGroup : Component, INamedObject, ITagServer
+    public partial class TagGroup : Component, INamedObject
     {
         private string name;
         private bool added = false;
@@ -39,6 +38,8 @@ namespace DotNetCom.General.Tags
         [Description("Collection of tags linked to this control.")]
         public TagCollection TagCollection { get; set; }
 
+        public bool Enabled { get; set; }
+
         public TagGroup()
         {
             InitializeComponent();
@@ -55,6 +56,5 @@ namespace DotNetCom.General.Tags
         {
             Data.TagsDataBase.Remove(this);
         }
-
     }
 }
