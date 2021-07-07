@@ -27,7 +27,7 @@ namespace ProDAq
             AppNodes = new AppNodes(this);
         }
 
-        public void AddModules(IComModule[] comModules)
+        public void AddModules(IDaqModule[] comModules)
         {
             foreach (var module in comModules)
             {
@@ -35,7 +35,7 @@ namespace ProDAq
             }
         }
 
-        public void AddModule(IComModule comModule)
+        public void AddModule(IDaqModule comModule)
         {
             if(comModule is OpcClient)
             {
@@ -47,7 +47,7 @@ namespace ProDAq
             }
         }
 
-        private TreeNode AddModuleToNode(TreeNode parentNode, IComModule newModule, int imgIdx)
+        private TreeNode AddModuleToNode(TreeNode parentNode, IDaqModule newModule, int imgIdx)
         {
             var newNode = new TreeNode();
             newNode.Text = $"{newModule.Name}";
