@@ -7,6 +7,8 @@ namespace Scaduino
 {
     static class Program
     {
+        static private AppData appData = new AppData();
+
         /// <summary>
         /// Ponto de entrada principal para o aplicativo.
         /// </summary>
@@ -15,7 +17,9 @@ namespace Scaduino
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            appData = appData.Load() as AppData;
+            Application.Run(new MainForm(appData));
         }
     }
 }
