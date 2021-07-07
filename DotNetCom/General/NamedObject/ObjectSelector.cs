@@ -138,7 +138,7 @@ namespace DotNetCom.General.NamedObject
                 {
                     var obj = context.Instance;
                     form.AvailableObjects = Data.TagsDataBase.Tags.Values.ToArray();
-                    form.SelectedObjects = ((ITagServer)obj).TagCollection?.Tags ?? new Tag[0];
+                    form.SelectedObjects = ((IDasModule)obj).TagCollection?.Tags ?? new Tag[0];
                     form.Text = "Tags Selector";
 
                     if (svc.ShowDialog(form) == DialogResult.OK)
