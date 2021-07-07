@@ -13,7 +13,7 @@ using System.Windows.Forms;
 
 namespace DotNetCom.SerialInterface
 {
-    public partial class SerialTagsServer : Serial, ITagServer
+    public partial class SerialTagsServer : Serial, IDasModule
     {
         [JsonProperty]
         [Category("General")]
@@ -42,9 +42,15 @@ namespace DotNetCom.SerialInterface
 
         [JsonProperty]
         [Category("General")]
+        [DisplayName("Name")]
+        [Description("Name used to identify this module on GUI.")]
+        public string Name { get; set; } = "Serial Tags Server";
+
+        [JsonProperty]
+        [Category("General")]
         [DisplayName("Enabled")]
         [Description("Enable or disable this module")]
-        public bool Enabled { get; set; }
+        public bool Enabled { get; set; } = true;
 
         private TagCollection tagCollection;
         private int bacc, bps;
@@ -114,6 +120,16 @@ namespace DotNetCom.SerialInterface
                     SendData(tag);
                 }
             }
+        }
+
+        public void Start()
+        {
+            Begin();
+        }
+
+        public void Stop()
+        {
+            End();
         }
     }
 }

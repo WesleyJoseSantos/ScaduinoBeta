@@ -1,4 +1,5 @@
 ﻿using DotNetCom.DataBase;
+using DotNetCom.General;
 using DotNetCom.General.Controls;
 using DotNetCom.General.NamedObject;
 using DotNetCom.General.Tags;
@@ -22,7 +23,7 @@ namespace DotNetCom.Web
     }
 
     [JsonObject(MemberSerialization.OptIn)]
-    public partial class HttpTagsServer : Component, ITagServer
+    public partial class HttpTagsServer : Component, IDasModule
     {
         private HttpListener listener;
         
@@ -76,9 +77,15 @@ namespace DotNetCom.Web
 
         [JsonProperty]
         [Category("General")]
+        [DisplayName("Name")]
+        [Description("Name used to identify this module on GUI.")]
+        public string Name { get; set; } = "Http Tags Server";
+
+        [JsonProperty]
+        [Category("General")]
         [DisplayName("Enabled")]
         [Description("Enable or disable this module")]
-        public bool Enabled { get; set; }
+        public bool Enabled { get; set; } = true;
 
         public event EventHandler StatusChanged;
 
@@ -116,10 +123,7 @@ namespace DotNetCom.Web
             }
             catch (Exception ex)
             {
-                Console?.Errors?.Invoke((MethodInvoker)delegate
-                {
-                    Console?.Errors?.AppendText(ex.Message + '\n');
-                });
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);0
                 Stop();
                 return;
             }

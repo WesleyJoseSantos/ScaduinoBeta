@@ -17,7 +17,7 @@ namespace DotNetCom.Text
     }
 
     [JsonObject(MemberSerialization.OptIn)]
-    public partial class SerialText : Serial, IText, IComModule
+    public partial class SerialText : Serial, IText, IDaqModule
     {
         [JsonProperty]
         [Category("General")]

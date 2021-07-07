@@ -17,7 +17,7 @@ namespace DotNetCom.OpcDa
     }
 
     [JsonObject(MemberSerialization.OptIn)]
-    public class OpcClient : Component, IComModule
+    public class OpcClient : Component, IDaqModule
     {
         private int updateRate = 500;
         private int itHdl;

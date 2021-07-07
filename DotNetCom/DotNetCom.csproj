@@ -116,7 +116,7 @@
     <Compile Include="General\Controls\ModuleConsole.cs" />
     <Compile Include="General\Controls\JsonTreeViewLoader.cs" />
     <Compile Include="General\Controls\ModuleStatus.cs" />
-    <Compile Include="General\IComModule.cs" />
+    <Compile Include="General\IDaqModule.cs" />
     <Compile Include="General\NamedObject\INamedObject.cs" />
     <Compile Include="General\NamedObject\ObjectSelector.cs">
       <SubType>Form</SubType>
@@ -124,8 +124,9 @@
     <Compile Include="General\NamedObject\ObjectSelector.Designer.cs">
       <DependentUpon>ObjectSelector.cs</DependentUpon>
     </Compile>
+    <Compile Include="General\Tags\ITagCollectionContainer.cs" />
     <Compile Include="General\Tags\ITagWriterConteiner.cs" />
-    <Compile Include="General\Tags\ITagServer.cs" />
+    <Compile Include="General\IDasModule.cs" />
     <Compile Include="General\Tags\ITagGroupsConteiner.cs" />
     <Compile Include="General\Tags\Tag.cs">
       <SubType>Component</SubType>
