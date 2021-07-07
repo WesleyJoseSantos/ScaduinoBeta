@@ -22,7 +22,7 @@ namespace ProDAq
             set
             {
                 appData = value as AppData;
-                appTree.AddModules(appData.ComModules);
+                appTree.AddModules(appData.DaqModules);
                 appTree.AppNodes.Datalogging.Tag = appData.Datalogger;
             }
         }
@@ -55,7 +55,7 @@ namespace ProDAq
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FileDialog.Save(AppData);
+            FileDialog.SaveAs(AppData);
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -77,7 +77,7 @@ namespace ProDAq
 
         private void Start()
         {
-            foreach (var module in appData.ComModules)
+            foreach (var module in appData.DaqModules)
             {
                 if (module.Enabled) module.Start();
             }
@@ -99,7 +99,7 @@ namespace ProDAq
 
         private void Stop()
         {
-            foreach (var module in appData.ComModules)
+            foreach (var module in appData.DaqModules)
             {
                 module.Stop();
             }
@@ -192,14 +192,14 @@ namespace ProDAq
         {
             var pGrid = s as PropertyGrid;
             var obj = pGrid.SelectedObject;
-            if(e.ChangedItem.Label == "Name" && obj is IComModule)
+            if(e.ChangedItem.Label == "Name" && obj is IDaqModule)
             {
                 if(lastNode != null)
                 {
                     lastNode.Text = e.ChangedItem.Value as string;
                 }
             }
-            if (e.ChangedItem.Label == "Items" && obj is IComModule)
+            if (e.ChangedItem.Label == "Items" && obj is IDaqModule)
             {
                 LoadSignals();
             }

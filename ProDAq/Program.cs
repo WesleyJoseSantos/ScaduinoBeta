@@ -28,7 +28,7 @@ namespace ProDAq
                     Application.SetCompatibleTextRenderingDefault(false);
 
                     AppData = new AppData();
-                    AppData = AppData.LoadDefault() as AppData;
+                    AppData = AppData.Load() as AppData;
                     notifyIcon = new AppNotifyIcon();
 
                     ShowStartScreen();
